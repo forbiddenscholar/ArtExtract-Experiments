@@ -38,7 +38,11 @@ class MSIDataset(Dataset):
         rgb_path = os.path.join(self.images_dir, img_name)
         rgb_image = Image.open(rgb_path).convert('RGB')
         
+        if self.transform:
+            rgb_image = self.transform(rgb_image)
+        
         # Convert to tensor [3, H, W]
+        # this is what 2024's project missed (it treated rgb as [1, H, W])
         rgb_tensor = tf.to_tensor(rgb_image)
         
         # Load 8 multispectral images
@@ -54,9 +58,7 @@ class MSIDataset(Dataset):
         # Stack the 8 channels into [8, H, W]
         msi_tensor = torch.cat(msi_tensors, dim=0)
         
-        # Apply transforms if provided
-        if self.transform:
-            rgb_tensor = self.transform(rgb_tensor)
-            msi_tensor = self.transform(msi_tensor)
+        ## add a check if returns 8 channels or not
+        assert msi_tensor.shape[0] == 8, "MSI channels not equal to 8"
         
         return rgb_tensor, msi_tensor
