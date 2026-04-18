@@ -19,3 +19,7 @@ Successfully returns the RGB and MSI tensor pairs !!!
 
 - As seen in the output image, the two dots are extremely noisy and therefore simple pixel differencing fails to capture semantic structure hence we are required to use complex swin transformer architecture
 - This necessitates the use of the synthetic augmentation pipeline in Phase 1 for a perfect ground truth prediction and these generated masks can be used in Phase 2 for finetuning the pipeline on noisy masks as ***"Spatial Hints"*** for the model
+
+## pseudo_siamese_heads.py
+- This script defines the very first layers of the model (the unshared input heads)
+- It will take tensors of depth 3 and 8 as input pass them through the conv2d layers and project them into a shared embedding space
